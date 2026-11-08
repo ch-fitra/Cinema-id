@@ -2,173 +2,160 @@
 
 **Aplikasi katalog film dan simulasi pemesanan tiket bioskop berbasis Flutter.**
 
-Cinema ID dibuat untuk pembelajaran pengembangan aplikasi: menampilkan katalog film, mencari judul, memilih bioskop dan kursi, serta melihat riwayat pemesanan. State aplikasi dikelola menggunakan Provider.
-
-> **Status proyek:** prototipe. Login dan registrasi belum memverifikasi akun, data pemesanan hanya tersimpan selama aplikasi berjalan, dan pembayaran belum terintegrasi. Pemeriksaan pada 8 November 2026 menemukan penghambat kompilasi dan beberapa bug fungsional. Lihat [laporan analisis](ANALISIS_PROJECT.md).
-
-## Daftar isi
-
-- [Fitur](#fitur)
-- [Teknologi](#teknologi)
-- [Struktur repository](#struktur-repository)
-- [Instalasi](#instalasi)
-- [Menjalankan dan memeriksa aplikasi](#menjalankan-dan-memeriksa-aplikasi)
-- [Alur penggunaan](#alur-penggunaan)
-- [Berkas pendukung](#berkas-pendukung)
-- [Masalah yang diketahui](#masalah-yang-diketahui)
-- [Prioritas pengembangan](#prioritas-pengembangan)
+Cinema ID merupakan proyek pembelajaran pengembangan aplikasi yang menggabungkan katalog film, pencarian, informasi film, dan alur pemesanan tiket dalam satu antarmuka. Pengguna dapat memilih bioskop, kursi, tanggal, dan jam menonton, lalu melihat ringkasan pesanan melalui riwayat pembelian.
 
 ## Fitur
 
-| Fitur | Implementasi saat ini |
-| --- | --- |
-| Login dan registrasi | Form dengan validasi dasar, belum terhubung ke layanan autentikasi |
-| Beranda | Banner film sedang tayang dan daftar rekomendasi |
-| Pencarian | Pencarian judul dari katalog lokal |
-| Genre | Action, Comedy, dan Romance; masih memiliki bug tab dan navigasi |
-| Detail film | Poster, tanggal rilis, rating, dan sinopsis |
-| Pemesanan | Pilihan bioskop, kursi, tanggal, jam, dan perhitungan harga |
-| Riwayat | Daftar pesanan, dialog struk, dan penghapusan item |
-| Tema | Pergantian mode terang dan gelap |
+- **Beranda:** banner film sedang tayang dan daftar rekomendasi.
+- **Pencarian film:** mencari judul dari katalog yang tersedia.
+- **Kategori genre:** Action, Comedy, dan Romance.
+- **Detail film:** poster, sinopsis, rating, dan tanggal rilis.
+- **Simulasi pemesanan:** pilihan bioskop, kursi, tanggal, jam, serta perhitungan total harga.
+- **Riwayat pemesanan:** daftar pesanan, dialog struk, dan penghapusan item.
+- **Login dan registrasi:** form untuk masuk ke alur utama aplikasi.
+- **Mode terang dan gelap:** pengaturan tema melalui drawer di beranda.
 
-Katalog film ditulis langsung di kode. Poster dimuat dari `image.tmdb.org` dan memerlukan koneksi internet. Label sedang tayang menggunakan data statis, bukan jadwal bioskop terkini.
+> Aplikasi masih berupa prototipe. Form akun belum terhubung ke autentikasi, pesanan hanya tersimpan di memori, dan tombol pembelian belum memproses pembayaran atau memesan kursi pada sistem bioskop. Katalog dan label sedang tayang menggunakan data statis.
 
 ## Teknologi
 
-| Teknologi | Peran |
+| Teknologi | Kegunaan |
 | --- | --- |
-| Flutter / Dart | Antarmuka dan logika aplikasi |
-| `provider` | Pengelolaan state film, tiket, dan tema |
-| `carousel_slider` | Carousel banner film |
-| `intl` | Format tanggal |
-| `flutter_test` | Pengujian widget |
-| Git LFS | Penyimpanan video, APK, dan ZIP |
+| Flutter dan Dart | Antarmuka serta logika aplikasi |
+| Provider | Pengelolaan state film, tiket, dan tema |
+| Carousel Slider | Banner film pada beranda |
+| Intl | Format tanggal pada riwayat |
+| Flutter Test | Pengujian widget |
 
-Konfigurasi Android, iOS, web, Windows, Linux, dan macOS tersedia. Seluruh target tersebut belum diverifikasi melalui build pada audit ini.
+Poster film dimuat dari `image.tmdb.org`, sehingga membutuhkan koneksi internet.
 
-## Struktur repository
+## Struktur proyek
 
 ```text
 Cinema-id/
-|-- README.md
-|-- ANALISIS_PROJECT.md
-|-- laporan_tugas.txt
-|-- 0706.mp4
-|-- cinema_id.apk
-|-- cinema_id_v1.zip
-`-- cinema_id_v1/
-    `-- cinema_id_v1/             # Root aplikasi Flutter
-        |-- lib/
-        |   |-- main.dart        # Entry point dan konfigurasi Provider
-        |   |-- components/      # Banner, navbar, dan rekomendasi
-        |   |-- page/            # Halaman dan alur aplikasi
-        |   `-- provider/        # Data film, state tiket, dan tema
-        |-- test/                # Tes widget
-        |-- android/
-        |-- ios/
-        |-- web/
-        |-- windows/
-        |-- linux/
-        |-- macos/
-        `-- pubspec.yaml         # Dependensi dan konfigurasi Flutter
+|-- lib/
+|   |-- main.dart                 # Entry point dan konfigurasi Provider
+|   |-- components/               # Banner, navigasi bawah, dan rekomendasi
+|   |-- page/
+|   |   |-- login/                # Form login dan registrasi
+|   |   |-- home.dart             # Beranda
+|   |   |-- pencarian.dart        # Pencarian film
+|   |   |-- genre.dart            # Kategori film
+|   |   |-- detail_film.dart      # Informasi film dan pemesanan
+|   |   `-- histori_page.dart     # Riwayat dan struk pesanan
+|   `-- provider/                 # State katalog, pemesanan, dan tema
+|-- test/                         # Tes widget
+|-- android/
+|-- ios/
+|-- web/
+|-- windows/
+|-- linux/
+|-- macos/
+|-- pubspec.yaml                  # Konfigurasi dan dependensi
+`-- README.md
 ```
 
-Folder bertingkat `cinema_id_v1/cinema_id_v1` dipertahankan sesuai susunan proyek asli. Jalankan perintah Flutter dari folder tersebut.
+Konfigurasi beberapa platform tersedia, tetapi keberadaannya belum berarti seluruh target telah berhasil dibangun dan diuji.
 
-## Instalasi
+## Persiapan
 
-Siapkan Git, Git LFS, Flutter SDK beserta Dart, serta perangkat atau emulator untuk platform tujuan. Untuk Android, siapkan Android SDK dan selesaikan konfigurasi toolchain yang dilaporkan oleh `flutter doctor`.
+Siapkan:
 
-### 1. Clone repository
+1. Git untuk mengambil source.
+2. Flutter SDK beserta Dart.
+3. Perangkat atau emulator untuk menjalankan aplikasi.
+4. Android SDK jika menjalankan target Android.
+
+Periksa lingkungan pengembangan dengan:
 
 ```sh
-git lfs install
+flutter doctor
+```
+
+Constraint Dart pada `pubspec.yaml` adalah `>=3.3.1 <4.0.0`. Kesesuaian SDK juga mengikuti dependensi dan `pubspec.lock`.
+
+## Instalasi dan menjalankan aplikasi
+
+```sh
 git clone https://github.com/ch-fitra/Cinema-id.git
 cd Cinema-id
-git lfs pull
-```
-
-`git lfs pull` mengambil isi lengkap video, APK, dan ZIP. Jika berkas tersebut hanya berisi teks yang diawali `version https://git-lfs.github.com/spec/v1`, isi Git LFS belum terunduh.
-
-### 2. Siapkan dependensi
-
-```sh
-cd cinema_id_v1/cinema_id_v1
-flutter doctor
 flutter pub get
+flutter devices
 ```
 
-`pubspec.yaml` menetapkan constraint Dart `>=3.3.1 <4.0.0`. Versi SDK yang bisa digunakan juga dipengaruhi dependensi dan `pubspec.lock`. Audit menggunakan **Flutter 3.47.4 / Dart 3.13.3** dan menemukan konflik carousel; versi tersebut belum menjadi konfigurasi build yang berhasil.
-
-Konfigurasi SDK lokal seperti `android/local.properties` tidak dilacak Git. Sesuaikan lokasi SDK dengan komputer pengembang.
-
-## Menjalankan dan memeriksa aplikasi
-
-Setelah penghambat kompilasi diperbaiki, jalankan:
+Setelah masalah kompatibilitas yang dijelaskan di bawah diselesaikan, jalankan pada perangkat yang terhubung:
 
 ```sh
-flutter devices
+flutter run
+```
+
+Jika terdapat beberapa perangkat, tentukan ID perangkat dari hasil `flutter devices`:
+
+```sh
 flutter run -d <device-id>
 ```
 
-Ganti `<device-id>` dengan ID perangkat dari `flutter devices`.
+Seluruh perintah Flutter dijalankan dari root repository, yaitu folder yang berisi `pubspec.yaml`. Konfigurasi SDK lokal seperti `android/local.properties` disesuaikan dengan komputer pengembang dan tidak dilacak Git.
 
-Untuk analisis dan pengujian:
+## Cara menggunakan aplikasi
+
+### 1. Masuk ke aplikasi
+
+Pada halaman **Login**, isi kolom email/nomor telepon dan password, kemudian tekan **Login**. Jika ingin mencoba form registrasi, pilih **Register**, isi email, password, dan konfirmasi password yang sama.
+
+Pada versi ini, form hanya melakukan validasi dasar. Akun belum dibuat atau diverifikasi melalui server.
+
+### 2. Menemukan film
+
+Di halaman **Home**, telusuri banner dan daftar rekomendasi. Gunakan ikon pencarian untuk mengetik judul dan mengirim pencarian. Menu **Genre** pada navigasi bawah menyediakan kategori film.
+
+### 3. Melihat informasi film
+
+Tekan kartu atau poster film untuk membuka detail berisi tanggal rilis, rating, dan sinopsis. Tanggal rilis yang ditampilkan merupakan informasi film, bukan jadwal tayang bioskop.
+
+### 4. Membuat simulasi pesanan
+
+1. Tekan tombol pembelian dengan ikon uang di halaman detail.
+2. Pilih salah satu bioskop.
+3. Pilih kursi menggunakan kontrol pada chip kursi.
+4. Tentukan tanggal dan jam menonton.
+5. Periksa pilihan dan total harga, lalu tekan **Buy Now**.
+
+Harga pada prototipe dihitung berdasarkan jumlah kursi:
+
+| Bioskop | Harga per kursi |
+| --- | --- |
+| Bioskop 1 | Rp20.000 |
+| Bioskop 2 | Rp15.000 |
+| Bioskop 3 | Rp35.000 |
+
+Harga tersebut merupakan nilai contoh di kode, bukan tarif bioskop aktual. Pemesanan belum memeriksa jadwal resmi atau ketersediaan kursi.
+
+### 5. Melihat riwayat
+
+Pilih **Purchase History** pada navigasi bawah. Tekan pesanan untuk membuka dialog struk, atau geser item untuk menghapusnya. Riwayat disimpan sementara dan dapat hilang ketika aplikasi dimulai ulang; implementasi juga menjadwalkan penghapusan sesudah 12 jam.
+
+### 6. Mengganti tema
+
+Buka drawer di halaman beranda, lalu gunakan sakelar pada bagian **Settings** untuk berganti antara mode terang dan gelap.
+
+## Status pengembangan
+
+Pemeriksaan pada 8 November 2026 menggunakan **Flutter 3.47.4 / Dart 3.13.3** menemukan:
+
+- Konflik `CarouselController` antara `carousel_slider 4.2.1` dan Flutter, termasuk di dalam paket carousel, sehingga kompilasi belum berhasil pada lingkungan tersebut.
+- Ketidaksesuaian jumlah tab dan halaman pada Genre, serta pemilihan data yang dapat membuka detail film berbeda.
+- Validasi pemesanan yang belum mewajibkan bioskop dan kursi.
+- Tes widget yang masih memakai contoh counter bawaan Flutter.
+- Konfigurasi release Android yang masih memerlukan izin internet pada main manifest dan signing release.
+
+Karena itu, instruksi menjalankan aplikasi di atas merupakan alur pengembangan setelah kendala diselesaikan. Fitur **Logout** dan **Forgot Password** juga belum memiliki aksi.
+
+Untuk memeriksa source dan menjalankan tes:
 
 ```sh
 flutter analyze
 flutter test
 ```
 
-Hasil pemeriksaan pada 8 November 2026:
-
-| Pemeriksaan | Hasil |
-| --- | --- |
-| `flutter analyze` | 16 temuan: 3 error, 3 warning, dan 10 info |
-| `flutter test --no-pub` | Gagal pada tahap kompilasi karena konflik `CarouselController` |
-| Build release dan pengujian perangkat | Belum dilakukan pada audit ini |
-
-Tes yang tersedia masih berupa tes counter bawaan Flutter dan perlu disesuaikan dengan aplikasi Cinema ID.
-
-## Alur penggunaan
-
-1. Buka form login atau registrasi untuk masuk ke antarmuka utama.
-2. Telusuri rekomendasi, banner, atau hasil pencarian film.
-3. Buka detail film, lalu tekan tombol pembelian.
-4. Pilih bioskop, kursi, tanggal, dan jam tonton.
-5. Tekan **Buy Now** untuk menambahkan pesanan ke riwayat lokal.
-6. Buka **Purchase History** untuk melihat pesanan dan dialog struk.
-
-Alur ini menggambarkan implementasi prototipe. Tombol pembelian belum menjalankan pembayaran atau reservasi kursi pada sistem bioskop.
-
-## Berkas pendukung
-
-| Berkas | Keterangan |
-| --- | --- |
-| [Laporan analisis](ANALISIS_PROJECT.md) | Temuan kode, hasil pemeriksaan, batasan audit, dan urutan perbaikan |
-| [Catatan tugas](laporan_tugas.txt) | Daftar komponen antarmuka dan rujukan implementasi |
-| [APK](cinema_id.apk) | APK yang disertakan sejak awal; belum dipasang atau dibuktikan sesuai source saat ini |
-| [Arsip proyek](cinema_id_v1.zip) | ZIP asli sebagai referensi; masih memuat cache dan konfigurasi lokal lama |
-| [Video](0706.mp4) | Video sekitar 7 menit 16 detik; isi visual dan audio belum ditinjau pada audit |
-
-APK, ZIP, dan video disimpan melalui Git LFS. Cache, build sementara, dan konfigurasi mesin lokal pada folder source dikecualikan melalui `.gitignore`.
-
-## Masalah yang diketahui
-
-- **Kompilasi:** `carousel_slider 4.2.1` mengalami konflik `CarouselController` dengan Flutter pada lingkungan audit. Konflik juga terjadi di dalam paket tersebut.
-- **Genre:** jumlah tab tidak sesuai jumlah halaman, dan navigasi detail menggunakan indeks daftar film yang belum difilter.
-- **Pemesanan:** bioskop dan kursi belum diwajibkan; belum ada pemeriksaan ketersediaan kursi atau jadwal resmi.
-- **Akun dan data:** belum ada autentikasi, pemisahan data per pengguna, atau penyimpanan persisten.
-- **Riwayat:** timer penghapusan dijadwalkan dua kali dan key item belum unik untuk pembelian film yang sama.
-- **Rilis Android:** izin internet pada main manifest belum tersedia dan signing release masih memakai konfigurasi debug.
-
-Lihat [ANALISIS_PROJECT.md](ANALISIS_PROJECT.md) untuk lokasi kode dan penjelasan dampak setiap temuan.
-
-## Prioritas pengembangan
-
-1. Selesaikan konflik kompilasi dan sesuaikan tes dengan alur aplikasi.
-2. Perbaiki tab Genre, navigasi detail, dan validasi pemesanan.
-3. Tambahkan ID unik untuk film dan pesanan, lalu rapikan model data.
-4. Implementasikan autentikasi, database, dan reservasi kursi melalui backend.
-5. Tambahkan status pesanan, pengelolaan kedaluwarsa, dan integrasi pembayaran.
-6. Lengkapi konfigurasi release serta pengujian perangkat dan CI.
+Pengembangan berikutnya dapat difokuskan pada kompatibilitas dependensi, perbaikan alur genre dan pemesanan, autentikasi, penyimpanan persisten, serta integrasi pembayaran.
