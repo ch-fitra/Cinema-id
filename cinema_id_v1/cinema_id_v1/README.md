@@ -1,16 +1,20 @@
-# cinema_id_v1
+# Cinema ID - Aplikasi Flutter
 
-A new Flutter project.
+Folder ini merupakan root aplikasi Flutter untuk katalog film dan simulasi pemesanan tiket Cinema ID.
 
-## Getting Started
+Dokumentasi fitur, struktur repository, persiapan SDK, cara menjalankan aplikasi, dan masalah yang diketahui tersedia di [README utama](../../README.md). Hasil pemeriksaan kode tersedia di [laporan analisis](../../ANALISIS_PROJECT.md).
 
-This project is a starting point for a Flutter application.
+## Perintah pengembangan
 
-A few resources to get you started if this is your first Flutter project:
+Jalankan dari folder ini:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```sh
+flutter pub get
+flutter analyze
+flutter test
+flutter run
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Status pemeriksaan 8 November 2026:** kompilasi pada Flutter 3.47.4 terhambat konflik `CarouselController` pada `carousel_slider 4.2.1`. Perbaiki masalah tersebut sebelum menjalankan aplikasi. Tes widget juga masih memakai contoh counter bawaan Flutter.
+
+Login, registrasi, dan pemesanan masih berupa simulasi lokal tanpa backend autentikasi atau pembayaran.
