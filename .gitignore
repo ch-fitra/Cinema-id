@@ -1,0 +1,27 @@
+# Flutter and generated caches
+**/.dart_tool/
+**/build/
+**/.gradle/
+**/.pub-cache/
+**/.pub/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/ephemeral/
+# IDE and machine-specific configuration
+**/.idea/
+**/*.iml
+**/local.properties
+**/Generated.xcconfig
+**/flutter_export_environment.sh
+# Credentials and signing keys
+**/.env
+**/.env.*
+!**/.env.example
+**/key.properties
+**/*.jks
+**/*.keystore
+**/*.pem
+**/*.p12
+# Operating system files
+**/.DS_Store
+**/Thumbs.db
